@@ -113,7 +113,7 @@ public class HistogramTest {
 	@Test
 	public void shouldCalculateHistogram_customCollector() throws Exception {
 		// given
-		HistogramCollector collector = new HistogramCollector();
+		HistogramCollector<Integer> collector = new HistogramCollector<>();
 
 		// when
 		Map<Integer, Long> histogram = integerStream.collect(collector);

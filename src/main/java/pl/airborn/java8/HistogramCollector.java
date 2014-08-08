@@ -10,22 +10,22 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
 
-public class HistogramCollector implements Collector<Integer, Map<Integer, Long>, Map<Integer, Long>> {
+public class HistogramCollector<T> implements Collector<T, Map<T, Long>, Map<T, Long>> {
 
 	@Override
-	public Supplier<Map<Integer, Long>> supplier() {
+	public Supplier<Map<T, Long>> supplier() {
 		return HashMap::new;
 	}
 
 	@Override
-	public BiConsumer<Map<Integer, Long>, Integer> accumulator() {
+	public BiConsumer<Map<T, Long>, T> accumulator() {
 		return (acc, key) ->
 				acc.compute(key,
 						(key1, value) -> (value == null) ? 1 : ++value);
 	}
 
 	@Override
-	public BinaryOperator<Map<Integer, Long>> combiner() {
+	public BinaryOperator<Map<T, Long>> combiner() {
 		return (acc1, acc2) -> {
 			acc2.forEach((key2, value2) ->
 					acc1.merge(key2, value2, Long::sum));
@@ -34,7 +34,7 @@ public class HistogramCollector implements Collector<Integer, Map<Integer, Long>
 	}
 
 	@Override
-	public Function<Map<Integer, Long>, Map<Integer, Long>> finisher() {
+	public Function<Map<T, Long>, Map<T, Long>> finisher() {
 		return Function.identity();
 	}
 
