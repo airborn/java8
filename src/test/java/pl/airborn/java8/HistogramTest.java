@@ -57,6 +57,34 @@ public class HistogramTest {
 	}
 
 	@Test
+	public void shouldCalculateHistogram_newMapApi_compute() throws Exception {
+		// given
+		Map<Integer, Long> histogram = new HashMap<>();
+
+		// when
+		integerStream.forEach(key ->
+						histogram.compute(key,
+								(key1, value) -> (value == null) ? 1 : ++value
+						)
+		);
+
+		// then
+		assertIsCorrectHistogram(histogram);
+	}
+
+	@Test
+	public void shouldCalculateHistogram_newMapApi_merge() throws Exception {
+		// given
+		Map<Integer, Long> histogram = new HashMap<>();
+
+		// when
+		integerStream.forEach(key -> histogram.merge(key, 1l, Long::sum));
+
+		// then
+		assertIsCorrectHistogram(histogram);
+	}
+
+	@Test
 	public void shouldCalculateHistogram_groupingAndTransforming() throws Exception {
 		// when
 		Map<Integer, List<Integer>> m = integerStream.collect(Collectors.groupingBy(Function.identity()));
@@ -76,22 +104,6 @@ public class HistogramTest {
 						Function.identity(),
 						Collectors.mapping(i -> 1l, Collectors.summingLong(l -> l))
 				)
-		);
-
-		// then
-		assertIsCorrectHistogram(histogram);
-	}
-
-	@Test
-	public void shouldCalculateHistogram_foreach() throws Exception {
-		// given
-		Map<Integer, Long> histogram = new HashMap<>();
-
-		// when
-		integerStream.forEach(key ->
-						histogram.compute(key,
-								(key1, value) -> (value == null) ? 1 : ++value
-						)
 		);
 
 		// then
