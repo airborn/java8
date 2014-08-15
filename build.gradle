@@ -12,3 +12,7 @@ dependencies {
     testCompile 'org.assertj:assertj-core:1.6.1'
 
 }
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.0'
+}
